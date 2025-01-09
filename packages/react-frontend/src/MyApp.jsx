@@ -13,18 +13,6 @@ function MyApp() {
     setCharacters([...characters, person]);
   }  
   const [characters, setCharacters] = useState([
-    {
-      name: "Charlie",
-      job: "Janitor"
-    },
-    {
-      name: "Dee",
-      job: "Aspiring actress"
-    },
-    {
-      name: "Dennis",
-      job: "Bartender"
-    }
   ]);
 
   function removeOneCharacter(index) {
@@ -38,7 +26,7 @@ function MyApp() {
       <Table characterData = {characters} 
       removeCharacter={removeOneCharacter}
       />
-      <Form />
+      <Form handleSubmit={updateList}/>
     </div>
   );
 }

@@ -7,19 +7,20 @@ function Form(props) {
         name: "",
         job: ""
     });
-}
 
-function submitForm() {
-    props.handleSubmit(person);
-    setPerson({ name: "", job: ""});
-}
+    // note that there is only one event at a time
+    function handleChange(event) {
+        const { name, value } = EventTarget.target;
+        if (name === "job")
+            setPerson({ name: person["name"], job: value });
+        else setPerson({ name: value, job: person["job"]});
 
-// note that there is only one event at a time
-function handleChange(event) {
-    const { name, value } = EventTarget.target;
-    if (name === "job")
-        setPErson({ name: person["name"], job: value });
-    else setPerson({ name: value, job: person["job"]});
+    }   
+    function submitForm() {
+        props.handleSubmit(person);
+        setPerson({ name: "", job: ""});
+    }
+   
     return (
         <form>
             <label htmlFor ="name">Name</label>
@@ -38,6 +39,7 @@ function handleChange(event) {
                 value={person.job}
                 onChange={handleChange}
             />
+            <button type="button" onCluck={submitForm}>Submit</button>
         </form>
         
     );
