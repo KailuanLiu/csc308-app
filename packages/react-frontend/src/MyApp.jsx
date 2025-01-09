@@ -4,7 +4,7 @@
 // Vite will convert these files and covert them to JavaScript to satisfy import
 import React from "react";
 import Table from "./Table";
-import React, { useState } from "react";
+import { useState } from "react";
 
 const characters = [
   {
