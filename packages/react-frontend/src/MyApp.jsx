@@ -5,27 +5,25 @@
 import React from "react";
 import Table from "./Table";
 import { useState } from "react";
+import Form from "./Form"
 
-const characters = [
-  {
-    name: "Charlie",
-    job: "Janitor"
-  },
-  {
-    name: "Dee",
-    job: "Aspiring actress"
-  },
-  {
-    name: "Dennis",
-    job: "Bartender"
-  }
-];
 
 function MyApp() {
+  function updateList(person) {
+    setCharacters([...characters, person]);
+  }  
   const [characters, setCharacters] = useState([
     {
       name: "Charlie",
       job: "Janitor"
+    },
+    {
+      name: "Dee",
+      job: "Aspiring actress"
+    },
+    {
+      name: "Dennis",
+      job: "Bartender"
     }
   ]);
 
@@ -37,7 +35,10 @@ function MyApp() {
   }
   return (
     <div className = "container">
-      <Table characterData = {characters} />
+      <Table characterData = {characters} 
+      removeCharacter={removeOneCharacter}
+      />
+      <Form />
     </div>
   );
 }
