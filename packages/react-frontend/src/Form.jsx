@@ -10,7 +10,7 @@ function Form(props) {
 
     // note that there is only one event at a time
     function handleChange(event) {
-        const { name, value } = EventTarget.target;
+        const { name, value } = event.target;
         if (name === "job")
             setPerson({ name: person["name"], job: value });
         else setPerson({ name: value, job: person["job"]});
@@ -39,7 +39,7 @@ function Form(props) {
                 value={person.job}
                 onChange={handleChange}
             />
-            <button type="button" onCluck={submitForm}>Submit</button>
+            <button type="button" onClick={submitForm}>Submit</button>
         </form>
         
     );
