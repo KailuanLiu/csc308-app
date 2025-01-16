@@ -13,13 +13,14 @@ function TableHeader() {
 }
 
 function TableBody(props) {
+
     const rows = props.characterData.map((row, index) => {
         return (
             <tr key={index}>
                 <td>{row.name}</td>
                 <td>{row.job}</td>
                 <td>
-                    <button onClick={() => props.removeCharacter(inedx)}>
+                    <button onClick={() => props.removeCharacter(index)}>
                         Delete
                     </button>
                 </td>
@@ -36,11 +37,13 @@ function TableBody(props) {
 
 // passing data on the other side by using props through this.prop
 function Table(props) {
+
     return (
         <table>
             <TableHeader />
-            <TableBody characterData={props.characterData}
-            removeCharacter={props.remove}
+            <TableBody 
+                characterData={props.characterData}
+                removeCharacter={props.removeCharacter}
             />
         </table>
     );
