@@ -1,10 +1,12 @@
 // index.js
 // ES Module syntax
 import express from "express";
+import cors from "cors";
 
 const app = express();
 const port = 8000;
 
+app.use(cors());
 app.use(express.json());
 
 const users = {
@@ -35,9 +37,9 @@ const users = {
        job: "Bartender"
      },
      {
-      "id": "qwe123",
-      "job": "Zookeeper",
-      "name": "Cindy"
+      id: "qwe123",
+      job: "Zookeeper",
+      name: "Cindy"
      }
    ]
  };
@@ -48,12 +50,12 @@ app.get("/", (req, res) => {
 
 const findUserByName = (name) => {
   return users["users_list"].filter(
-    (user) => user["name"] === name
-  );
+    (user) => user["name"] === name);
 };
 
-const findUserById = (id) =>
-  users["users_list"].find((user) => user["id"] === id);
+const findUserById = (id) => { 
+  return users["users_list"].find((user) => user["id"] === id);
+};
 
 const addUser = (user) => {
   users["users_list"].push(user);
@@ -62,26 +64,51 @@ const addUser = (user) => {
 
 app.post("/users", (req, res) => {
   const userToAdd = req.body;
-  addUser(userToAdd);
-  res.send();
+  const id = Math=random().toString(36).substring(2,9);
+  const newUser = { ...userToAdd, id };
+  addUser(newUser);
+  res.status(201).send(newUser);
 });
 
-// define the /users route
-app.get('/users/:id', (req, res) => {
-  const id = req.params["id"];  //or req.params.id
-  let result = findUserById(id);
-  const name = req.query.name;
-  if (result === undefined) {
-    res.status(404).send("Resource not found");
+app.delete("/users/:id", (req, res) => {
+  const { id } = req.params;
+  const userIndex = users.users_list.findIndex(user => user.id === id);
+  if (userIndex !== -1) {
+    users.users_list.splice(userIndex, 1);  // Remove the user
+    res.status(204).send();  // Respond with no content (204)
   } else {
-    res.send(result);
+    res.status(404).send("User not found");
   }
-  if (name != undefined) {
+});
+
+
+const findUsersByNameAndJob = (name, job) => {
+  return users["users_list"].filter(
+    (user) => user["name"] === name && user["job"] === job
+  );
+};
+
+app.get("/users", (req, res) => {
+  const { name, job } = req.query;
+  if (name && job) {
+    const result = findUsersByNameAndJob(name, job);
+    res.send({ users_list: result });
+  } else if (name) {
     let result = findUserByName(name);
     result = { users_list: result };
     res.send(result);
   } else {
     res.send(users);
+  }
+});
+
+app.get("/users/:id", (req, res) => {
+  const id = req.params["id"];  //or req.params.id
+  let result = findUserById(id);
+  if (result === undefined) {
+    res.status(404).send("Resource not found");
+  } else {
+    res.send(result);
   }
  });
 
