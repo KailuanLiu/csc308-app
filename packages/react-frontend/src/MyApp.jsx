@@ -1,4 +1,4 @@
-// src/MyApp.jsx 
+/// src/MyApp.jsx ///
 // src/MyApp.jsx is imported only as src/MyApp
 // Vite may find files that are actually in JavaScript with (.js), (.ts), or (.tsx)
 // Vite will convert these files and covert them to JavaScript to satisfy import
@@ -7,17 +7,9 @@ import Table from "./Table";
 import { useState, useEffect } from "react";
 import Form from "./Form"
 
-
 function MyApp() {
-  // update the table if POST call is successful
-  // succesfful if promise is returned by postUser
-  function updateList(person) {
-    postUser(person)
-      .then(() => setCharacters([...characters, person]))
-      .catch((error) => {
-        console.log(error);
-      })
-  }  
+  const [characters, setCharacters] = useState([]);
+
   // function returns a promise
   // useful for when we need to wait for an operation to finish
   // GET request through API backend, then return data from back
@@ -38,60 +30,64 @@ function MyApp() {
       // as second argument to useEffect
   }, [] );
 
-  function removeOneCharacter(index) {
-    const updated = characters.filter((character, i) => {
-      return i !== index;
+  function postUser(person) {
+    const promise = fetch("http://localhost:8000/users", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(person),
     });
-    setCharacters(updated);
+    return promise;
   }
+
+  // update the table if POST call is successful
+  // succesfful if promise is returned by postUser
+  function updateList(person) {
+    postUser(person)
+    .then((res) => {
+      if (res.status === 201) {
+        return res.json();
+      }
+      throw new Error("Failed to create user");
+    })
+    .then((newUser) => {
+      setCharacters([...characters, newUser]);
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+  }
+
+  function removeOneCharacter(index, userId) {
+    fetch(`http://localhost:8000/users/${userId}`, {
+      method: "DELETE",
+    });
+    promise
+      .then((res) => {
+        if (res.status === 204) {
+          const updatedCharacters = characters.filter((character, i) => i !== index);
+          setCharacters(updatedCharacters);
+        } else if (res.status == 404) {
+          console.log("Failed to delete user");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+
   return (
     <div className = "container">
-      <Table characterData = {characters} 
-      removeCharacter={removeOneCharacter}
+      <Table 
+        characterData = {characters} 
+        removeCharacter={(index, userId) => removeOneCharacter(index, userId)}
       />
       <Form handleSubmit={updateList}/>
     </div>
   );
-  function postUser(person) {
-    const promise = fetch("http://localhost:8000/users", {  
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(person),
-    });
-    return promise;
-  }
-
-  function updateList(person) {
-    postUser(person)
-    .then(() => setCharacters([...characters, person]))
-    .catch((error) => {
-      console.log(error);
-    })
-  }
-
-  function postUser(person) {
-    const promise = fetch("http://localhost:8000/users", {  
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(person),
-    });
-    return promise;
-  }
-
-  function updateList(person) {
-    postUser(person)
-    .then(() => setCharacters([...characters, person]))
-    .catch((error) => {
-      console.log(error);
-    })
-  }
-
 }
-
   
 // makes the component available
 export default MyApp;

@@ -13,17 +13,17 @@ function Form(props) {
         const { name, value } = event.target;
         if (name === "job")
             setPerson({ name: person["name"], job: value });
-        else setPerson({ name: value, job: person["job"]});
+        else setPerson({ name:value, job: person["job"]});
+    }
 
-    }   
     function submitForm() {
         props.handleSubmit(person);
-        setPerson({ name: "", job: ""});
+        setPerson({ name: "", job: "" });
     }
    
     return (
         <form>
-            <label htmlFor ="name">Name</label>
+            <label htmlFor="name">Name</label>
             <input
                 type="text"
                 name="name"
@@ -31,14 +31,14 @@ function Form(props) {
                 value={person.name}
                 onChange={handleChange}
             />
-            <label htmlFor = "job">Job</label>
-            <input
-                type="text"
-                name="job"
-                id="job"
-                value={person.job}
-                onChange={handleChange}
-            />
+            <label htmlFor="job">Job</label>
+                <input
+                    type="text"
+                    name="job"
+                    id="job"
+                    value={person.job}
+                    onChange={handleChange}
+                />
             <button type="button" onClick={submitForm}>Submit</button>
         </form>
         
