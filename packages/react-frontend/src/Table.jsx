@@ -1,31 +1,32 @@
-// src/Table.jsx
 import React from "react";
 
 function TableHeader() {
     return (
         <thead>
             <tr>
-                <th>Name</th>
-                <th>Job</th>
+                <th>ID</th>
+                <th>name</th>
+                <th>job</th>
             </tr>
         </thead>
-    )
+    );
 }
 
 function TableBody(props) {
     const rows = props.characterData.map((row, index) => {
         return (
-            <tr key={index}>
-                <td>{row.name}</td>
-                <td>{row.job}</td>
-                <td>
-                    <button onClick={() => props.removeCharacter(inedx)}>
-                        Delete
-                    </button>
-                </td>
-            </tr>
-        );
-    }
+                <tr key={index}>
+                    <td>{row.id}</td>
+                    <td>{row.name}</td>
+                    <td>{row.job}</td>
+                    <td>
+                        <button onClick={() => props.removeCharacter(index, row.id)}>
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            );
+        }
     );
     return (
         <tbody>
@@ -34,13 +35,13 @@ function TableBody(props) {
     );
 }
 
-// passing data on the other side by using props through this.prop
 function Table(props) {
     return (
         <table>
             <TableHeader />
-            <TableBody characterData={props.characterData}
-            removeCharacter={props.remove}
+            <TableBody 
+                characterData={props.characterData}
+                removeCharacter={props.removeCharacter}
             />
         </table>
     );
