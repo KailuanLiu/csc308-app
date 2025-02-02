@@ -23,8 +23,13 @@ function MyApp() {
       // does not need to check respose status itslef
       // res.json() to parse JS object, return is JSON format
       .then((res)=> res.json())
-      .then((json) => setCharacters(json["users_list"]))
-      .catch((error) => { console.log(error); });
+      .then((json) => {
+        console.log(json);
+        setCharacters(json["users_list"] || []);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
       // useEffect hook should be called only when the MyApp 
       // component first mounts by passing an empty array [] 
       // as second argument to useEffect
@@ -60,15 +65,14 @@ function MyApp() {
   }
 
   function removeOneCharacter(index, userId) {
-    fetch(`http://localhost:8000/users/${userId}`, {
+    return fetch(`http://localhost:8000/users/${userId}`, {
       method: "DELETE",
-    });
-    promise
+    })
       .then((res) => {
         if (res.status === 204) {
           const updatedCharacters = characters.filter((character, i) => i !== index);
           setCharacters(updatedCharacters);
-        } else if (res.status == 404) {
+        } else if (res.status === 404) {
           console.log("Failed to delete user");
         }
       })
@@ -76,7 +80,7 @@ function MyApp() {
         console.error(error);
       });
   }
-
+  
 
   return (
     <div className = "container">
