@@ -11,17 +11,19 @@ mongoose
   })
   .catch((error) => console.log(error));
 
-  function getUsers(name, job) {
-    let promise;
-    if (name === undefined && job === undefined) {
-      promise = userModel.find();  // Fetch all users
-    } else if (name && !job) {
-      promise = findUserByName(name);
-    } else if (job && !name) {
-      promise = findUserByJob(job);
-    }
-    return promise;  // Return the promise
+function getUsers(name, job) {
+  let promise; 
+  if (!name && !job) {
+    promise = userModel.find();
+  } else if (name && !job) {
+    promise =  findUserByName(name);
+  } else if (job && !name) {
+    promise = findUserByJob(job);
+  } else if (name && job) {
+    promise = findUserByNameAndJob(name, job);
   }
+  return promise;
+}
 
 function findUserById(_id) {
   return userModel.findById(_id);
@@ -41,12 +43,15 @@ function findUserByJob(job) {
   return userModel.find({ job: job });
 }
 
-function deleteUserById(_id) {
-  return userModel.findByIdAndDelete(_id);  // Mongoose method for deletion
+function findUserByNameAndJob(name, job) {
+  return userModel.find({ name: name, job: job });
 }
 
-// Export all functions explicitly
-export { 
+function deleteUserById(_id) {
+  return userModel.findByIdAndDelete(_id).then((deletedUser) => !!deletedUser);
+}
+
+export default{ 
   addUser, 
   getUsers, 
   findUserById, 
