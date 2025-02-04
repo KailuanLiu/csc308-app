@@ -61,12 +61,12 @@ app.post("/users", (req, res) => {
   });
 });
 
-// Delete a user by ID
+// delete user by id 
 app.delete("/users/:_id", (req, res) => {
-  const id = req.params["_id"];
+  const _id = req.params["_id"];
 
   userService
-    .deleteUserById(_id)
+    .deleteUserById(_id) 
     .then((success) => {
       if (success) {
         res.status(204).send();
@@ -79,6 +79,7 @@ app.delete("/users/:_id", (req, res) => {
       res.status(500).send("internal server error");
     });
 });
+
 
 // Start server
 app.listen(port, () => {
